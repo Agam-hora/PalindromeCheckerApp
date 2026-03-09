@@ -2,14 +2,17 @@ import java.util.Scanner;
 
 class PalindromeCheckerApp {
 
-    static class Node {
-        char data;
-        Node next;
+    // Recursive function
+    static boolean isPalindromeRecursive(String str, int start, int end) {
 
-        Node(char data) {
-            this.data = data;
-            this.next = null;
-        }
+        // Base condition
+        if (start >= end)
+            return true;
+
+        if (Character.toLowerCase(str.charAt(start)) != Character.toLowerCase(str.charAt(end)))
+            return false;
+
+        return isPalindromeRecursive(str, start + 1, end - 1);
     }
 
     public static void main(String[] args) {
@@ -32,63 +35,14 @@ class PalindromeCheckerApp {
             System.out.println("It is NOT a Palindrome");
         }
 
-        // -------- UC8 Linked List Based Palindrome Check --------
+        // -------- UC9 Recursive Palindrome Check --------
 
-        Node head = null;
-        Node tail = null;
+        boolean result = isPalindromeRecursive(input, 0, input.length() - 1);
 
-        // Convert string to linked list
-        for (char c : input.toCharArray()) {
-            Node newNode = new Node(Character.toLowerCase(c));
-
-            if (head == null) {
-                head = newNode;
-                tail = newNode;
-            } else {
-                tail.next = newNode;
-                tail = newNode;
-            }
-        }
-
-        // Find middle using slow & fast pointer
-        Node slow = head;
-        Node fast = head;
-
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-
-        // Reverse second half
-        Node prev = null;
-        Node current = slow;
-
-        while (current != null) {
-            Node next = current.next;
-            current.next = prev;
-            prev = current;
-            current = next;
-        }
-
-        // Compare first half and reversed second half
-        Node first = head;
-        Node second = prev;
-
-        boolean isPalindrome = true;
-
-        while (second != null) {
-            if (first.data != second.data) {
-                isPalindrome = false;
-                break;
-            }
-            first = first.next;
-            second = second.next;
-        }
-
-        if (isPalindrome) {
-            System.out.println("Palindrome (Checked using Linked List)");
+        if (result) {
+            System.out.println("Palindrome (Checked using Recursion)");
         } else {
-            System.out.println("Not a Palindrome (Checked using Linked List)");
+            System.out.println("Not a Palindrome (Checked using Recursion)");
         }
 
         sc.close();
