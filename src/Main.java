@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.Stack;
+import java.util.Queue;
+import java.util.LinkedList;
 
 class PalindromeCheckerApp {
 
@@ -23,50 +25,32 @@ class PalindromeCheckerApp {
             System.out.println("It is NOT a Palindrome");
         }
 
-        // -------- UC4 Character Array Based Palindrome Check --------
+        // -------- UC6 Queue + Stack Based Palindrome Check --------
 
-        char[] arr = input.toCharArray();
+        Stack<Character> stack = new Stack<>();
+        Queue<Character> queue = new LinkedList<>();
 
-        int start = 0;
-        int end = arr.length - 1;
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            stack.push(ch);      // LIFO
+            queue.add(ch);       // FIFO
+        }
 
         boolean isPalindrome = true;
 
-        while (start < end) {
-            if (arr[start] != arr[end]) {
+        while (!stack.isEmpty()) {
+            if (stack.pop() != queue.remove()) {
                 isPalindrome = false;
                 break;
             }
-            start++;
-            end--;
         }
 
         if (isPalindrome) {
-            System.out.println("Palindrome (Checked using Character Array)");
+            System.out.println("Palindrome (Checked using Queue and Stack)");
         } else {
-            System.out.println("Not a Palindrome (Checked using Character Array)");
+            System.out.println("Not a Palindrome (Checked using Queue and Stack)");
         }
 
-        // -------- UC5 Stack Based Palindrome Check --------
-
-        Stack<Character> stack = new Stack<>();
-
-        for (int i = 0; i < input.length(); i++) {
-            stack.push(input.charAt(i));
-        }
-
-        String stackReverse = "";
-
-        while (!stack.isEmpty()) {
-            stackReverse = stackReverse + stack.pop();
-        }
-
-        if (input.equalsIgnoreCase(stackReverse)) {
-            System.out.println("Palindrome (Checked using Stack)");
-        } else {
-            System.out.println("Not a Palindrome (Checked using Stack)");
-        }
-
-        sc.close();// test commit
+        sc.close();
     }
 }
