@@ -1,55 +1,66 @@
 import java.util.Scanner;
-import java.util.Stack;
-import java.util.Queue;
-import java.util.LinkedList;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
-class PalindromeCheckerApp {
+public class UseCase4PalindromeCheckerApp {
 
+    /**
+     * Application entry point for UC4.
+     * @param args Command-line arguments
+     */
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Palindrome Checker App");
         System.out.print("Enter a word: ");
         String input = sc.nextLine();
 
-        String reversed = "";
+        // Convert string into character array
+        char[] chars = input.toCharArray();
 
-        for (int i = input.length() - 1; i >= 0; i--) {
-            reversed = reversed + input.charAt(i);
-        }
+        // Initialize pointers
+        int start = 0;
+        int end = chars.length - 1;
 
-        if (input.equalsIgnoreCase(reversed)) {
-            System.out.println("It is a Palindrome");
-        } else {
-            System.out.println("It is NOT a Palindrome");
-        }
-
-        // -------- UC6 Queue + Stack Based Palindrome Check --------
-
-        Stack<Character> stack = new Stack<>();
-        Queue<Character> queue = new LinkedList<>();
-
-        for (int i = 0; i < input.length(); i++) {
-            char ch = input.charAt(i);
-            stack.push(ch);      // LIFO
-            queue.add(ch);       // FIFO
-        }
-
+        // Assume palindrome initially
         boolean isPalindrome = true;
 
-        while (!stack.isEmpty()) {
-            if (stack.pop() != queue.remove()) {
+        // Two-pointer comparison
+        while (start < end) {
+            if (Character.toLowerCase(chars[start]) != Character.toLowerCase(chars[end])) {
                 isPalindrome = false;
+                break;
+            }
+            start++;
+            end--;
+        }
+
+        System.out.println("Input : " + input);
+        System.out.println("Is Palindrome? : " + isPalindrome);
+
+        // -------- UC7 Deque Based Palindrome Check --------
+
+        Deque<Character> deque = new ArrayDeque<>();
+
+        // Insert characters into deque
+        for (char c : input.toCharArray()) {
+            deque.addLast(Character.toLowerCase(c));
+        }
+
+        boolean dequePalindrome = true;
+
+        // Compare front and rear
+        while (deque.size() > 1) {
+            char first = deque.removeFirst();
+            char last = deque.removeLast();
+
+            if (first != last) {
+                dequePalindrome = false;
                 break;
             }
         }
 
-        if (isPalindrome) {
-            System.out.println("Palindrome (Checked using Queue and Stack)");
-        } else {
-            System.out.println("Not a Palindrome (Checked using Queue and Stack)");
-        }
+        System.out.println("Is Palindrome (Using Deque)? : " + dequePalindrome);
 
         sc.close();
     }
