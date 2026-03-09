@@ -70,4 +70,3 @@ class PalindromeCheckerApp {
         sc.close();// test commit
     }
 }
-}
