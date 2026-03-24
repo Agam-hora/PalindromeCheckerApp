@@ -1,84 +1,24 @@
-import java.util.*;
+import java.util.Scanner;
 
-// -------- Strategy Interface --------
-interface PalindromeStrategy {
-    boolean isPalindrome(String input);
-}
-
-// -------- Stack Strategy --------
-class StackStrategy implements PalindromeStrategy {
-
-    private String normalize(String str) {
-        return str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-    }
-
-    public boolean isPalindrome(String input) {
-        String str = normalize(input);
-
-        Stack<Character> stack = new Stack<>();
-
-        for (char c : str.toCharArray()) {
-            stack.push(c);
-        }
-
-        for (char c : str.toCharArray()) {
-            if (c != stack.pop()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-}
-
-// -------- Deque Strategy --------
-class DequeStrategy implements PalindromeStrategy {
-
-    private String normalize(String str) {
-        return str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-    }
-
-    public boolean isPalindrome(String input) {
-        String str = normalize(input);
-
-        Deque<Character> deque = new ArrayDeque<>();
-
-        for (char c : str.toCharArray()) {
-            deque.add(c);
-        }
-
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-}
-
-// -------- Context Class (Uses Strategy) --------
-class PalindromeChecker {
-
-    private PalindromeStrategy strategy;
-
-    // Constructor Injection
-    public PalindromeChecker(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    // Change strategy at runtime
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean check(String input) {
-        return strategy.isPalindrome(input);
-    }
-}
-
-// -------- Main Application --------
 class PalindromeCheckerApp {
+
+    // Recursive function
+    static boolean isPalindromeRecursive(String str, int start, int end) {
+        if (start >= end)
+            return true;
+
+        if (str.charAt(start) != str.charAt(end))
+            return false;
+
+        return isPalindromeRecursive(str, start + 1, end - 1);
+    }
+
+    // UC10: Normalize string (remove spaces & ignore case)
+    static String normalizeString(String str) {
+        // Remove all non-alphanumeric characters (including spaces)
+        str = str.replaceAll("[^a-zA-Z0-9]", "");
+        return str.toLowerCase();
+    }
 
     public static void main(String[] args) {
 
@@ -88,29 +28,29 @@ class PalindromeCheckerApp {
         System.out.print("Enter a sentence: ");
         String input = sc.nextLine();
 
-        // Choose strategy dynamically
-        System.out.println("\nChoose Strategy:");
-        System.out.println("1. Stack आधारित");
-        System.out.println("2. Deque आधारित");
-        System.out.print("Enter choice: ");
-        int choice = sc.nextInt();
+        // -------- UC10 Normalization --------
+        String normalized = normalizeString(input);
 
-        PalindromeStrategy strategy;
-
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
+        // Reverse normalized string
+        String reversed = "";
+        for (int i = normalized.length() - 1; i >= 0; i--) {
+            reversed = reversed + normalized.charAt(i);
         }
 
-        // Inject strategy
-        PalindromeChecker checker = new PalindromeChecker(strategy);
-
-        // Execute
-        if (checker.check(input)) {
-            System.out.println("It is a Palindrome ✅");
+        // Check using loop
+        if (normalized.equals(reversed)) {
+            System.out.println("It is a Palindrome (Ignoring spaces & case)");
         } else {
-            System.out.println("It is NOT a Palindrome ❌");
+            System.out.println("It is NOT a Palindrome (Ignoring spaces & case)");
+        }
+
+        // -------- Recursive Check --------
+        boolean result = isPalindromeRecursive(normalized, 0, normalized.length() - 1);
+
+        if (result) {
+            System.out.println("Palindrome (Recursion, UC10)");
+        } else {
+            System.out.println("Not a Palindrome (Recursion, UC10)");
         }
 
         sc.close();
