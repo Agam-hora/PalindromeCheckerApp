@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class UseCase4PalindromeCheckerApp {
+public class PalindromeCheckerApp {
 
     /**
      * Application entry point for UC4.
