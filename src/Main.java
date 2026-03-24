@@ -1,10 +1,32 @@
-
 import java.util.Scanner;
 
-class PalindromeCheckerApp {
+// -------- UC11: Palindrome Service Class --------
+class PalindromeChecker {
 
-    // Recursive function
-    static boolean isPalindromeRecursive(String str, int start, int end) {
+    // Normalize string (remove spaces & ignore case)
+    private String normalizeString(String str) {
+        str = str.replaceAll("[^a-zA-Z0-9]", "");
+        return str.toLowerCase();
+    }
+
+    // Iterative check using StringBuilder
+    public boolean checkPalindrome(String input) {
+        String normalized = normalizeString(input);
+
+        StringBuilder reversed = new StringBuilder(normalized);
+        reversed.reverse();
+
+        return normalized.equals(reversed.toString());
+    }
+
+    // Recursive check
+    public boolean checkPalindromeRecursive(String input) {
+        String normalized = normalizeString(input);
+        return isPalindromeRecursive(normalized, 0, normalized.length() - 1);
+    }
+
+    // Internal recursive function
+    private boolean isPalindromeRecursive(String str, int start, int end) {
         if (start >= end)
             return true;
 
@@ -13,45 +35,32 @@ class PalindromeCheckerApp {
 
         return isPalindromeRecursive(str, start + 1, end - 1);
     }
+}
 
-    // UC10: Normalize string (remove spaces & ignore case)
-    static String normalizeString(String str) {
-        // Remove all non-alphanumeric characters (including spaces)
-        str = str.replaceAll("[^a-zA-Z0-9]", "");
-        return str.toLowerCase();
-    }
+// -------- Main Application Class --------
+class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
+        PalindromeChecker checker = new PalindromeChecker();
 
         System.out.println("Palindrome Checker App");
         System.out.print("Enter a sentence: ");
         String input = sc.nextLine();
 
-        // -------- UC10 Normalization --------
-        String normalized = normalizeString(input);
-
-        // Reverse normalized string
-        String reversed = "";
-        for (int i = normalized.length() - 1; i >= 0; i--) {
-            reversed = reversed + normalized.charAt(i);
+        // Iterative check
+        if (checker.checkPalindrome(input)) {
+            System.out.println("It is a Palindrome (Service - Iterative)");
+        } else {
+            System.out.println("It is NOT a Palindrome (Service - Iterative)");
         }
 
-        // Check using loop
-        if (normalized.equals(reversed)) {
-            System.out.println("It is a Palindrome (Ignoring spaces & case)");
+        // Recursive check
+        if (checker.checkPalindromeRecursive(input)) {
+            System.out.println("Palindrome (Service - Recursion)");
         } else {
-            System.out.println("It is NOT a Palindrome (Ignoring spaces & case)");
-        }
-
-        // -------- Recursive Check --------
-        boolean result = isPalindromeRecursive(normalized, 0, normalized.length() - 1);
-
-        if (result) {
-            System.out.println("Palindrome (Recursion, UC10)");
-        } else {
-            System.out.println("Not a Palindrome (Recursion, UC10)");
+            System.out.println("Not a Palindrome (Service - Recursion)");
         }
 
         sc.close();
